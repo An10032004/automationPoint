@@ -1,0 +1,222 @@
+<div class="container">
+
+  <!-- HEADER -->
+
+  <div class="header">
+
+    <h1>Essay AI Scoring System</h1>
+
+    <p>
+      Angular + Spring Boot + FastAPI + DistilBERT
+    </p>
+
+  </div>
+
+  <!-- STATS -->
+
+  <div class="stats">
+
+    <div class="stat-card">
+
+      <h2>{{ essays.length }}</h2>
+
+      <p>Total Essays</p>
+
+    </div>
+
+    <div class="stat-card">
+
+      <h2>{{ averageScore.toFixed(1) }}</h2>
+
+      <p>Average Score</p>
+
+    </div>
+
+  </div>
+
+  <!-- FORM -->
+
+  <div class="form-container">
+
+    <h2>Essay Editor</h2>
+
+    <div class="form-group">
+
+      <label>Title</label>
+
+      <input
+        type="text"
+        [(ngModel)]="formData.title"
+        placeholder="Essay title">
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Content</label>
+
+      <textarea
+        rows="8"
+        [(ngModel)]="formData.content"
+        placeholder="Write your essay here">
+      </textarea>
+
+    </div>
+
+    <div class="button-group">
+
+      <button
+        class="save-btn"
+        (click)="saveEssay()">
+
+        Save Essay
+
+      </button>
+
+      <button
+        class="edit-btn"
+        (click)="editEssay()">
+
+        Update Essay
+
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- SEARCH -->
+
+  <div class="search-box">
+
+    <input
+      type="text"
+      placeholder="Search essay..."
+      [(ngModel)]="searchText">
+
+  </div>
+
+  <!-- LIST -->
+
+  <div class="essay-section">
+
+    <h2>Essay List</h2>
+
+    @if(filteredEssays.length === 0){
+
+      <div class="empty-state">
+
+        No essays found
+
+      </div>
+
+    }
+
+    @for(essay of filteredEssays; track essay.id){
+
+      <div class="essay-card">
+
+        <div class="essay-header">
+
+          <h3>
+            {{ essay.title }}
+          </h3>
+
+          <span class="essay-id">
+
+            #{{ essay.id }}
+
+          </span>
+
+        </div>
+
+        <div class="essay-content">
+
+          {{ essay.content }}
+
+        </div>
+
+        <div class="essay-score">
+
+          <strong>Score:</strong>
+
+          @if(essay.score && essay.score > 0){
+
+            <div class="essay-score">
+
+  <span class="score-badge">
+
+    {{ getScore10(essay.score) | number:'1.1-1' }}/10
+
+  </span>
+
+</div>
+
+          } @else {
+
+            <span class="not-scored">
+
+              Not Scored
+
+            </span>
+
+          }
+
+        </div>
+
+        <div class="feedback-box">
+
+          <strong>AI Feedback</strong>
+
+          <p>
+
+            {{ essay.feedback || 'No feedback available' }}
+
+          </p>
+
+        </div>
+
+        <div class="essay-actions">
+
+          <button
+            class="score-btn"
+            [disabled]="scoringId === essay.id"
+            (click)="scoreEssay(essay.id!)">
+
+            @if(scoringId === essay.id){
+
+              Scoring...
+
+            } @else {
+
+              AI Score
+
+            }
+
+          </button>
+
+          <button
+            class="load-btn"
+            (click)="loadEssayToForm(essay)">
+
+            Load
+
+          </button>
+
+          <button
+            class="delete-btn"
+            (click)="deleteEssay(essay.id!)">
+
+            Delete
+
+          </button>
+
+        </div>
+
+      </div>
+
+    }
+
+  </div>
+
+</div>
